@@ -13,6 +13,9 @@ LSE* inicializa_lista()
     return NULL;
 }
 
+//********************************************************************
+//********************************************************************
+
 LSE* insere_inicioLSE(LSE* iniLista, int info)
 /* Insere no início da lista os dados de um novo jogo.
  * Atualiza o ponteiro para o início da lista caso for possível inserir um elemento no início.
@@ -45,6 +48,9 @@ NodoAVL* inicializa_arvore()
     return NULL;
 }
 
+//********************************************************************
+//********************************************************************
+
 void imprime_formatado(NodoAVL* raiz, int nivel)
 /* Imprime a árvore formatadamente com identação para identificar os diferentes níveis dos nodos */
 {
@@ -61,6 +67,9 @@ void imprime_formatado(NodoAVL* raiz, int nivel)
         imprime_formatado(raiz->dir, nivel + 1);
     }
 }
+
+//********************************************************************
+//********************************************************************
 
 int altura(NodoAVL *nodo)
 /* Calcula a altura de uma árvore ou subárvore dada a sua raíz. */
@@ -80,6 +89,9 @@ int altura(NodoAVL *nodo)
     }
 }
 
+//********************************************************************
+//********************************************************************
+
 NodoAVL* rotacao_direita_S(NodoAVL* nodo)
 /* Faz uma rotação simples à direita em torno do nodo dado */
 {
@@ -94,6 +106,9 @@ NodoAVL* rotacao_direita_S(NodoAVL* nodo)
     return nodo;
 }
 
+//********************************************************************
+//********************************************************************
+
 NodoAVL* rotacao_esquerda_S(NodoAVL* nodo)
 /* Faz uma rotação simples à esquerda em torno do nodo dado */
 {
@@ -107,6 +122,9 @@ NodoAVL* rotacao_esquerda_S(NodoAVL* nodo)
 
     return nodo;
 }
+
+//********************************************************************
+//********************************************************************
 
 NodoAVL* rotacao_direita_D(NodoAVL* nodo)
 /* Faz uma rotação dupla à direita em torno do nodo dado */
@@ -134,6 +152,9 @@ NodoAVL* rotacao_direita_D(NodoAVL* nodo)
     return nodo;
 }
 
+//********************************************************************
+//********************************************************************
+
 NodoAVL* rotacao_esquerda_D(NodoAVL* nodo)
 /* Faz uma rotação dupla à esquerda em torno do nodo dado */
 {
@@ -160,6 +181,9 @@ NodoAVL* rotacao_esquerda_D(NodoAVL* nodo)
     return nodo;
 }
 
+//********************************************************************
+//********************************************************************
+
 NodoAVL* desbalanco_esq(NodoAVL* nodo, int* ok, Stats* stats)
 /* Faz o balanceamento do nodo dado quando seu fator
  * de desbalanceamento é 2.
@@ -185,6 +209,9 @@ NodoAVL* desbalanco_esq(NodoAVL* nodo, int* ok, Stats* stats)
     return nodo;
 }
 
+//********************************************************************
+//********************************************************************
+
 NodoAVL* desbalanco_dir(NodoAVL* nodo, int* ok, Stats* stats)
 /* Faz o balanceamento do nodo dado quando seu fator
  * de desbalanceamento é -2.
@@ -196,7 +223,7 @@ NodoAVL* desbalanco_dir(NodoAVL* nodo, int* ok, Stats* stats)
 
     if(aux->FB == -1) //se o nodo direito tem FB = -1;
     {
-        nodo =  rotacao_esquerda_S(nodo);
+        nodo = rotacao_esquerda_S(nodo);
         stats->rotacoes++;
     }
     else              //se o nodo direito tem FB = 1;
@@ -209,6 +236,9 @@ NodoAVL* desbalanco_dir(NodoAVL* nodo, int* ok, Stats* stats)
     *ok = 0;          //avisa para a função insere_arvore que está feito os balanceamentos
     return nodo;
 }
+
+//********************************************************************
+//********************************************************************
 
 NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* stats)
 /* Insere um elemento na árvore AVL.
@@ -278,4 +308,30 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     }
 
     return raiz;
+}
+
+//********************************************************************
+//********************************************************************
+
+NodoAVL* consulta_arvore(NodoAVL* raiz, char* palavra, Stats* stats)
+/* Busca na árvore a palavra dada, retornando um ponteiro para o nodo encontrado.
+ * Se não existir a palavra, retorna NULL */
+{
+    if(raiz != NULL)  //se a árvore não está vazia
+    {
+        stats->comparacoes_search++; //aumenta o número de comparações feitas nas consultas
+
+        if(strcmp(palavra, raiz->info) < 0) //se a palavra é lexicograficamente menor que o nodo atual
+        {
+            return(consulta_arvore(raiz->esq, palavra, stats)); //vai para o nodo esquerdo
+        }
+        else if(strcmp(palavra, raiz->info) > 0) //se a palavra é lexicograficamente maior que o nodo atual
+        {
+            return(consulta_arvore(raiz->dir, palavra, stats)); //vai para o nodo direito
+        }
+        else        //se a palavra foi encontrada, retorna o ponteiro para esse nodo;
+            return raiz;
+    }
+    else        //se não encontrou a palavra, retorna NULL
+        return NULL;
 }
