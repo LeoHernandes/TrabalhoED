@@ -36,3 +36,5 @@ void imprime_formatado(NodoAVL* raiz, int nivel);
 int altura (NodoAVL *nodo);
 
 NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* stats);
+
+NodoAVL* consulta_arvore(NodoAVL* raiz, char* palavra, Stats* stats);
