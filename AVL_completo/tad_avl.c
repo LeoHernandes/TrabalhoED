@@ -196,7 +196,7 @@ NodoAVL* desbalanco_dir(NodoAVL* nodo, int* ok, Stats* stats)
 
     if(aux->FB == -1) //se o nodo direito tem FB = -1;
     {
-        nodo = rotacao_esquerda_S(nodo);
+        nodo =  rotacao_esquerda_S(nodo);
         stats->rotacoes++;
     }
     else              //se o nodo direito tem FB = 1;
