@@ -19,7 +19,7 @@ typedef struct Tipo_AVL
     struct Tipo_AVL *esq;   // Ponteiro para subárvore esquerda
     struct Tipo_AVL *dir;   // Ponteiro para subárvore direita
     int FB;                 // Fator de balanceamento do nodo atual
-    char *info;             // Palavra do nodo
+    char *info;      // Palavra do nodo
     LSE *lista_id;          // Lista de incidência da palavra com os ID dos tweets em que ela aparece
 }NodoAVL;
 
