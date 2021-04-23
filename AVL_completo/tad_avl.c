@@ -7,19 +7,22 @@
 //   OPERAÇÕES DA LISTA SIMPLESMENTE ENCADEADA
 //*************************************************
 
-LSE* inicializa_lista()
+Descritor inicializa_lista(Descritor desc)
 /* Inicializa o ponteiro para o início da lista */
 {
-    return NULL;
+    desc.fimLista = NULL;
+    desc.inicioLista = NULL;
+
+    return desc;
 }
 
 //********************************************************************
 //********************************************************************
 
-LSE* insere_inicioLSE(LSE* iniLista, int info)
+Descritor insere_LSE(Descritor desc, int info)
 /* Insere no início da lista os dados de um novo jogo.
- * Atualiza o ponteiro para o início da lista caso for possível inserir um elemento no início.
- * Se não houver mais espaço na memória, apenas devolve o início da lista */
+ * Atualiza o descritor da lista caso for possível inserir um elemento no final.
+ * Se não houver mais espaço na memória, apenas devolve o descritor da lista */
 {
     LSE* novo;
 
@@ -28,29 +31,39 @@ LSE* insere_inicioLSE(LSE* iniLista, int info)
     if(novo != NULL)
     //se teve espaço na memória para alocar
     {
-        novo->info = info;
-        novo->prox = iniLista;
-        iniLista = novo;
+        novo->info = info;      //guarda a informação
+
+        if(desc.inicioLista == NULL)    //se a lista está vazia
+        {
+            desc.inicioLista = novo;    //novo ID é o início e fim da lista
+            desc.fimLista = novo;
+        }
+        else                            //senão
+        {
+            desc.fimLista->prox = novo; //fim da lista aponta para o novo termo
+            desc.fimLista = novo;       //novo termo se torna o fim da lista
+        }
+
+        novo->prox = NULL;
     }
 
-    //retorna o elemento novo, mesmo que ele seja NULL, alertando sobre o erro
-    //ou retorna o ponteiro para esse novo termo que é o mesmo que *iniLista
-    return iniLista;
+    //retorna o descritor da lista
+    return desc;
 }
 
 //********************************************************************
 //********************************************************************
 
-int consulta_lista(LSE* iniLista, int info)
+int consulta_lista(Descritor desc, int info)
 /* Verifica se um dado ID está na lista.
  * Devolve 1 se ele estiver.
  * Devolve 0 se não estiver. */
 {
-    while(iniLista != NULL) //enquanto não chegou no final da lista
+    while(desc.inicioLista != NULL) //enquanto não chegou no final da lista
     {
-        if(iniLista->info == info) //se encontrar o elemento
+        if(desc.inicioLista->info == info) //se encontrar o elemento
             return 1;              //retorna 1
-        iniLista = iniLista->prox;
+        desc.inicioLista = desc.inicioLista->prox;
     }
 
     return 0; //se não encontrou o elemento, retorna 0
@@ -273,8 +286,8 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
         raiz->FB = 0;
         raiz->info = (char*)malloc((strlen(palavra) + 1) * sizeof(char)); //armazena espaço na memória para guardar a palavra
         strcpy(raiz->info, palavra);            //insere a palavra no nodo
-        raiz->lista_id = inicializa_lista();
-        raiz->lista_id = insere_inicioLSE(raiz->lista_id, id); //insere o id na lista de ocorrências
+        raiz->desc = inicializa_lista(raiz->desc);
+        raiz->desc = insere_LSE(raiz->desc, id); //insere o id na lista de ocorrências
         *ok = 1;
         stats->nodos++;    //aumenta a contagem de nodos na arvore
     }
@@ -326,8 +339,8 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     //se a palavra já existe na árvore
     {
         stats->comparacoes_index++;
-        if(!consulta_lista(raiz->lista_id, id)) //se o ID não existe ainda na lista de incidência
-            raiz->lista_id = insere_inicioLSE(raiz->lista_id, id);
+        if(!consulta_lista(raiz->desc, id)) //se o ID não existe ainda na lista de incidência
+            raiz->desc = insere_LSE(raiz->desc, id);
     }
 
     return raiz;
