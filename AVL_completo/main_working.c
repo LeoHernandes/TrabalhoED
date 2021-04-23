@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
     FILE *consulta;
     NodoAVL *raiz;
     NodoAVL *nodoProcurado;
-    LSE *listaID;
+    Descritor descritor;
     Stats estatisticas = {0}; //variavel que guarda as estatistas da arvore
 
     char *palavra, linha[300], *id; // linhas a serem lidas do arquivo
@@ -80,15 +80,15 @@ int main (int argc, char *argv[])
         nodoProcurado = consulta_arvore(raiz, palavra, &estatisticas);
 
         if(nodoProcurado == NULL)   //se o nodo não foi encontrado
-            fprintf(saida, "Consulta: %-25s Palavra não encontrada\n", palavra);
+            fprintf(saida, "Consulta: %-20s Palavra não encontrada\n", palavra);
         else                        //se o nodo foi encontrado
         {
-            listaID = nodoProcurado->lista_id;
-            fprintf(saida, "Consulta: %-25s Palavra encontrada nos tweets", palavra);
-            while(listaID != NULL)
+            descritor = nodoProcurado->desc;
+            fprintf(saida, "Consulta: %-20s Palavra encontrada nos tweets", palavra);
+            while(descritor.inicioLista != NULL)
             {
-                fprintf(saida, " %d,", listaID->info); //escreve as incidências do tweet
-                listaID = listaID->prox;
+                fprintf(saida, " %d,", descritor.inicioLista->info); //escreve as incidências do tweet
+                descritor.inicioLista = descritor.inicioLista->prox;
             }
             fprintf(saida, "\n");
         }
