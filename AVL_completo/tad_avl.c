@@ -38,6 +38,24 @@ LSE* insere_inicioLSE(LSE* iniLista, int info)
     return iniLista;
 }
 
+//********************************************************************
+//********************************************************************
+
+int consulta_lista(LSE* iniLista, int info)
+/* Verifica se um dado ID está na lista.
+ * Devolve 1 se ele estiver.
+ * Devolve 0 se não estiver. */
+{
+    while(iniLista != NULL) //enquanto não chegou no final da lista
+    {
+        if(iniLista->info == info) //se encontrar o elemento
+            return 1;              //retorna 1
+        iniLista = iniLista->prox;
+    }
+
+    return 0; //se não encontrou o elemento, retorna 0
+}
+
 //*************************************************
 //           OPERAÇÕES DA ÁRVORE AVL
 //*************************************************
@@ -253,6 +271,7 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
         raiz->dir = NULL;
         raiz->esq = NULL;
         raiz->FB = 0;
+        raiz->info = (char*)malloc((strlen(palavra) + 1) * sizeof(char)); //armazena espaço na memória para guardar a palavra
         strcpy(raiz->info, palavra);            //insere a palavra no nodo
         raiz->lista_id = inicializa_lista();
         raiz->lista_id = insere_inicioLSE(raiz->lista_id, id); //insere o id na lista de ocorrências
@@ -262,7 +281,8 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else if(strcmp(palavra, raiz->info) < 0)
     //se o novo nodo é lexicograficamente menor que o nodo atual
     {
-        raiz = insere_arvore(raiz->esq, palavra, id, ok, stats); // vai para o nodo esquerdo
+        stats->comparacoes_index++;
+        raiz->esq = insere_arvore(raiz->esq, palavra, id, ok, stats); // vai para o nodo esquerdo
         if(*ok)
         {
             switch(raiz->FB)
@@ -283,7 +303,8 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else if(strcmp(palavra, raiz->info) > 0)
     //se o novo nodo é lexicograficamente maior que o nodo atual
     {
-        raiz = insere_arvore(raiz->dir, palavra, id, ok, stats); //vai para o nodo direito
+        stats->comparacoes_index++;
+        raiz->dir = insere_arvore(raiz->dir, palavra, id, ok, stats); //vai para o nodo direito
         if(*ok)
         {
             switch(raiz->FB)
@@ -304,7 +325,9 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else
     //se a palavra já existe na árvore
     {
-        raiz->lista_id = insere_inicioLSE(raiz->lista_id, id);
+        stats->comparacoes_index++;
+        if(!consulta_lista(raiz->lista_id, id)) //se o ID não existe ainda na lista de incidência
+            raiz->lista_id = insere_inicioLSE(raiz->lista_id, id);
     }
 
     return raiz;
