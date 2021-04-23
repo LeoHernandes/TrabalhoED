@@ -1,12 +1,14 @@
 // TIPOS ESTRUTURADOS ***********************
 typedef struct Tipo_Stats
 {
-    int nodos;
-    int rotacoes;
-    int altura;
-    int comparacoes_index;
-    int comparacoes_search;
+    int nodos;              // Contagem dos nodos da árvore
+    int rotacoes;           // Contagem das rotações feitas na indexação
+    int altura;             // Altura total da árvore
+    int comparacoes_index;  // Comparações feitas na indexação
+    int comparacoes_search; // Comparações feitas na consulta
 }Stats;
+
+//*******************************************
 
 typedef struct Tipo_LSE
 {
@@ -14,20 +16,30 @@ typedef struct Tipo_LSE
     struct Tipo_LSE* prox;  // Ponteiro para o próximo elemento da lsita
 }LSE;
 
+//*******************************************
+
+typedef struct Tipo_Desc
+{
+    LSE *inicioLista;       // Aponta para o início da lista
+    LSE *fimLista;          // Aponta para o fim da lista
+}Descritor;
+
+//*******************************************
+
 typedef struct Tipo_AVL
 {
     struct Tipo_AVL *esq;   // Ponteiro para subárvore esquerda
     struct Tipo_AVL *dir;   // Ponteiro para subárvore direita
     int FB;                 // Fator de balanceamento do nodo atual
-    char *info;      // Palavra do nodo
-    LSE *lista_id;          // Lista de incidência da palavra com os ID dos tweets em que ela aparece
+    char *info;             // Palavra do nodo
+    Descritor desc;         // Descritor da lista de incidência, apontando para o início e para o fim
 }NodoAVL;
 
 // OPERAÇÕES ********************************
 
-LSE* inicializa_lista();
+Descritor inicializa_lista(Descritor desc);
 
-LSE* insere_inicioLSE(LSE* iniLista, int info);
+Descritor insere_LSE(Descritor desc, int info);
 
 NodoAVL* inicializa_arvore();
 
