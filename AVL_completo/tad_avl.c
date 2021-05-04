@@ -277,6 +277,8 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
  * As maiores vão para a direita.
  * Não há elementos repetidos, são adicionados "IDs" de ocorrências nos nodos apenas */
 {
+    stats->comparacoes_index++; //incrementa uma comparação toda vez que entra na função
+
     if(raiz == NULL)
     //se chegamos num nodo folha ou a árvore é vazia, insere o novo nodo
     {
@@ -294,7 +296,6 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else if(strcmp(palavra, raiz->info) < 0)
     //se o novo nodo é lexicograficamente menor que o nodo atual
     {
-        stats->comparacoes_index++;
         raiz->esq = insere_arvore(raiz->esq, palavra, id, ok, stats); // vai para o nodo esquerdo
         if(*ok)
         {
@@ -316,7 +317,6 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else if(strcmp(palavra, raiz->info) > 0)
     //se o novo nodo é lexicograficamente maior que o nodo atual
     {
-        stats->comparacoes_index++;
         raiz->dir = insere_arvore(raiz->dir, palavra, id, ok, stats); //vai para o nodo direito
         if(*ok)
         {
@@ -338,9 +338,9 @@ NodoAVL* insere_arvore(NodoAVL* raiz, char* palavra, int id, int* ok, Stats* sta
     else
     //se a palavra já existe na árvore
     {
-        stats->comparacoes_index++;
         if(!consulta_lista(raiz->desc, id)) //se o ID não existe ainda na lista de incidência
             raiz->desc = insere_LSE(raiz->desc, id);
+        *ok = 0;
     }
 
     return raiz;
